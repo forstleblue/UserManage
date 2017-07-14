@@ -6,6 +6,8 @@ import * as $ from 'jquery'
 import { Link } from 'react-router-dom'
 import * as ReactDOM from 'react-dom'
 import * as styles from './AddUserPage/AddUser.css'
+import UserTable from './UserListPage/UserTable'
+import FormErrors from './FormErrors';
 
 interface userID extends React.Props<any> {
     userId: string
@@ -31,9 +33,10 @@ export default class UserDataForm extends React.Component<userID, any> {
             formErrors: {email: ''},
             emailValid: false,
             formValid: false,
-            country:'France'
+            country:''           
         };
 
+        
         this.validateFiled = this.validateFiled.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.errorClass = this.errorClass.bind(this);
@@ -44,6 +47,7 @@ export default class UserDataForm extends React.Component<userID, any> {
 
     emailChange(event: any) {
         this.setState({ email: event.target.value })
+        this.validateFiled("email", event.target.value)
     }
     validateFiled(filedName:any, value:any) {
         let emailValid = this.state.emailValid
@@ -119,8 +123,12 @@ export default class UserDataForm extends React.Component<userID, any> {
     }
 
     handleSubmit(event: any) {
-        
+        event.preventDefault();
         this.validateFiled("email", this.state.email)
+        if(this.state.formErrors["email"].length > 0 ){
+            return
+        }
+
         var data = {
             professional: this.state.professional,
             businessName: this.state.businessName,
@@ -176,9 +184,7 @@ export default class UserDataForm extends React.Component<userID, any> {
             <div className="container" style={{ paddingTop: 100 }}>
 
                 <form onSubmit={this.handleSubmit}>
-                    {/*<div className="panel panel-default">
-                        <FormErrors formErrors={this.state.formErrors} />
-                    </div>*/}
+                    
                     <div className="row" style={{ paddingBottom: 40 }}>
                         <div className="col-sm-2">
                             <label>Professionel</label>
@@ -314,6 +320,10 @@ export default class UserDataForm extends React.Component<userID, any> {
                         </div>
                         <div className={`form-group col-sm-2 ${this.errorClass(this.state.formErrors.email)}`}>
                             <input type="text" required name="email" value={this.state.email} onChange={this.handleUserInput} />
+                            {this.state.formErrors["email"].length > 0 ?
+                                <p>Email is invalid</p>:
+                                ''
+                            }
                         </div>
 
                         <div className="col-sm-2">

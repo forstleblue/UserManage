@@ -28,6 +28,8 @@ node_modules
 
 client/node_modules
 
+client/src/components/FormErrors.tsx
+client/src/components/FormErrors.js
 # Debug log from npm
 npm-debug.log
 
